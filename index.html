@@ -1,0 +1,372 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>MJ KIM</title>
+
+	<!--[if IE]>
+		<script type="text/javascript">
+			 var console = { log: function() {} };
+		</script>
+	<![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	
+	<script type="text/javascript" src="vendor/scrolloverflow.min.js"></script>
+	<script type="text/javascript" src="vendor/iscroll.js"></script>
+	<script type="text/javascript" src="js/jquery.fullpage.js"></script>
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.fullpage.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/jQuery.js"></script>
+    
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#fullpage").fullpage({
+
+			  sectionsColor: ["transparent", "transparent", "transparent", "transparent", "transparent"],
+			  anchors: ["firstPage", "secondPage", "3rdPage", "4thPage", "lastPage"],
+			  menu: "#menu",
+			  continuousVertical: true,
+              scrollOverflow: true
+            });
+		});
+	</script>
+
+     <script type="text/paperscript" canvas="canvas">
+    // The amount of symbol we want to place;
+    var count = 100;
+
+    // Create a symbol, which we will use to place instances of later:
+    var path = new Path.Circle({
+        center: new Point(0, 0),
+        radius: 5,
+        fillColor: "white",
+        strokeColor: "pink"
+    });
+
+    var symbol = new SymbolDefinition(path);
+
+    // Place the instances of the symbol:
+    for (var i = 0; i < count; i++) {
+        // The center position is a random point in the view:
+        var center = Point.random() * view.size;
+        var placed = symbol.place(center);
+        var scale = (i + 1) / count;
+        placed.scale(scale);
+        placed.data.vector = new Point({
+            angle: Math.random() * 360,
+            length : scale * Math.random() / 5
+        });
+    }
+
+    var vector = new Point({
+        angle: 45,
+        length: 0
+    });
+
+    var mouseVector = vector.clone();
+
+    function onMouseMove(event) {
+        mouseVector = view.center - event.point;
+    }
+
+    // The onFrame function is called up to 60 times a second:
+    function onFrame(event) {
+        vector = vector + (mouseVector - vector) / 20; //따라오는 속도1 원래 30
+
+        // Run through the active layer"s children list and change
+        // the position of the placed symbols:
+        for (var i = 0; i < count; i++) {
+            var item = project.activeLayer.children[i];
+            var size = item.bounds.size;
+            var length = vector.length / 28 * size.width / 28; //움직임 속도 변경2 원래 10씩
+            item.position += vector.normalize(length) + item.data.vector;
+            keepInView(item);
+        }
+    }
+
+    function keepInView(item) {
+        var position = item.position;
+        var itemBounds = item.bounds;
+        var bounds = view.bounds;
+        if (itemBounds.left > bounds.width) {
+            position.x = -item.bounds.width;
+        }
+
+        if (position.x < -itemBounds.width) {
+            position.x = bounds.width + itemBounds.width;
+        }
+
+        if (itemBounds.top > view.size.height) {
+            position.y = -itemBounds.height;
+        }
+
+        if (position.y < -itemBounds.height) {
+            position.y = bounds.height  + itemBounds.height / 2;
+        }
+    }
+
+
+    </script>
+
+    <script type="text/javascript" src="js/paper-full.min.js"></script>
+
+
+</head>
+
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<canvas id="canvas" resize hidpi="off" style="background:url"></canvas> <!--여기에 넣으면 전체 슬라이드 배경에 같은 이미지 깔림 그리고 위에 스크립트에서 배열에 transparent를 적용해주어야함.-->
+<nav id="menu">
+	<li data-menuanchor="firstPage" class="active"><a href="#firstPage"></a></li>
+	<li data-menuanchor="secondPage"><a href="#secondPage"></a></li>
+	<li data-menuanchor="3rdPage"><a href="#3rdPage"></a></li>
+	<li data-menuanchor="4thPage"><a href="#4thPage"></a></li>
+	<li data-menuanchor="lastPage"><a href="#lastPage"></a></li>
+</nav>
+  <!-- Navigation -->
+   <nav class="navbar navbar-default navbar-transparent navbar-fixed-top slidesNav" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll navL">
+                <a class="navbar-brand page-scroll logohere" href="#firstPage"></a>
+            </div>
+ <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse navR">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li>
+                        <a class="page-scroll" href="#secondPage" title="Portfolio">My B612</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#3rdPage" title="Web & UI/UX">Gallaxy-Web</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#4thPage" title="Photoshop&Illustrator">Planet-UI/UX-App</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#lastPage" title="about Me">The Astronaut</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+        <footer>
+        <!--스크롤 표시 마우스랑 키보드-->
+          <!-- <div class="scrollmouse">
+          <div class="scrollingrWrap">
+          <section class="scrolling">
+            <div class="cont-mouse">
+    <div class="mouse">
+      <div class="flechas">
+        <div class="arriba">
+          <div class="fl"></div>
+          <div class="fl"></div>
+        </div>
+        <div class="arriba">
+          <div class="flb"></div>
+          <div class="flb"></div>
+        </div>
+      </div>
+      <div class="rcont">
+        <div class="ruedita"></div>
+      </div>
+    </div>
+    <p>Scroll</p>
+    <p>Up or Down</p>
+  </div>
+            </section>
+         <div class="spacebarWrap">
+          <div class="spacebarBox">Space</div>
+             <p>Down</p>
+              </div>
+               </div>
+          </div>
+
+    </footer> -->
+    </nav>
+
+
+
+<section id="fullpage" class="fullpage-wrapper">
+
+	<div class="section firstPage" id="section0" >
+         <div class="slide">
+         <div class="intro a">
+          <div class="ready">
+                <div id="wrap">
+                        <div id="app"></div>
+                    </div>
+
+          <!--메인 행성들-->
+           <div id="roketPln">
+                <figure class="page-scroll"><a href="#slide7"></a></figure>
+            </div>
+            <div id="yellowPln">
+                <figure class="page-scroll"><a href="#secondPage" ></a></figure>
+            </div>
+            <div id="greyPln">
+                <figure ><a href="#3rdPage"></a></figure>
+            </div>
+            <div id="earthPln">
+                <figure><a href="#4thPage"></a></figure>
+            </div>
+            <div id="flagPln">
+                <figure><a href="#lastPage"></a></figure>
+            </div>
+
+<!--유에프오-->
+        <div id="wrapUfo">
+            <div id="ufoOrbit">
+                <figure class="ufo"><a href="#"></a></figure>
+            </div>
+
+        </div>
+
+		</div>
+             </div>
+
+	</div>
+    </div>
+
+	<div class="section secondPage" id="section1">
+            
+		<div class="slide fp-slide" id="slide1">
+                
+		    <div class="intro">
+                    
+             <div class="introLow">
+                
+                <div class="lowWrap">
+                    <div class="gWrap">
+                    <h2 class="title">Design Archive</h2 class="title">
+                    <p> 디자인 아트에 대해 올려 놓은 웹갤러리입니다.<br></p>
+                        <figure class="stars ">     
+                        <figure class="circle lowBox">
+                        <figure class="bottle contentBox">
+                                </figure>
+                            </figure>
+                        </figure>
+                        <a class="go" href="gallery/index.html#wrapper/" title="해당 사이트로 이동" target="_blank"><h2 class="links">My Gallery</h2></a>
+                    </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+		<div class="slide fp-slide" id="slide2"><h2 class="title">2.22222</h2 class="title"></div>
+		<div class="slide fp-slide" id="slide3">
+           <div class="intro"><h2 class="title">스크롤링</h2 class="title"></div>
+
+
+            </div>
+        -->
+		</div>
+
+	<div class="section 3rdPage" id="section2">
+		<div class="slide fp-slide" id="slide4">
+		    <div class="intro">
+            	<div class="introLow">
+		   		    <div class="lowWrap">
+		 		      <div class="logoWrap">
+						 <h2 class="title">Gallaxy of Web</h2 class="title">
+					    	<p>The works of Pure CSS3 Web Designs,<br>하드코딩으로 만들어진 별</p>
+						    <article class="logos">
+								<figure class="logo">
+                                    <a href="#slide5">
+                                        <h3 class="links"><strong>APPLE</strong><br></h3>
+                                        <h4>반응형 디자인<br>자바스크립트나 제이쿼리 없이 <br>css3와 html5로만 만든 애플사 리뉴얼</h4>
+                                    </a></figure>
+                            </article>
+                            
+        		  	  </div>
+        			</div>
+                </div>
+            </div>
+        </div>
+		<div class="slide intro" id="slide5">
+			    <div class="webWrap">
+					
+						<h2 class="title"><strong>Apple</strong></h2 class="title">
+			  			<video controls="controls" muted loop autoplay poster="images/app_poster.png">
+                               <source src="images/apple.mp4" type="video/mp4"/>
+                         </video>
+                         <div class="aWrap">
+                         <a class="go" href="../web/apple/index.html#navTop/" title="페이지로 이동" target="_parent"><h2 class="links">RENEWAL</h2></a>
+                         <a class="go go2" href="//www.apple.com/kr/" title="해당 사이트로 이동" target="_blank"><h2 class="links">ORIGINAL</h2></a>
+                         </div>
+				</div>
+        </div>
+		
+    </div>
+
+	<div class="section 4thPage" id="section3">
+	    <div class="slide" id="slide8">
+		<div class="intro">
+            <div class="introLow">
+            <div class="lowWrap">
+		    <div class="Wrap">
+			<h2 class="title">Planet-UI/UX-App</h2 class="title">
+            <p>UI/UX Design for Mobile Application</p>
+            <p>가상의 사용자, 페르소나를 설정하고 그 니즈에 따라 요구되는 새로운 어플을 기획하였습니다. 모바일이라는 환경 특수한 환경과 사용자 입장에서 편리성을 고려하여 인터페이스를 구성하였습니다.</p>
+			<article class="applogo">
+			    <a href="#slide9"></a>
+			</article>
+		</div>
+	</div>
+    </div>
+    </div>
+        </div>
+        <div class="slide intro" id="slide9">
+			    <div class="appWrap">
+                <h2 class="title">Mobile UI/UX Design</h2 class="title">
+                    <p>모바일 UX 프로세스 과정 중 사업 기획 아이디어 발상과 시장과 사용자 분석, 스토리보드 작성과 UI 설계 그리고 비주얼 디자인까지의 과정을 ppt로 작성하였습니다.</p>
+
+			    <video muted loop autoplay controls="controls" poster="images/uxui_poster.png">
+			        <source src="images/app.mp4" type="video/mp4"/>
+                </video>
+                <a class="go" href="//invis.io/9BB8CI67M/" title="mockup 살펴보기" target="_blank"><h2 class="links">Mockup</h2></a>
+             </div>
+        </div>
+    </div>
+
+
+
+	<div class="section lastPage" id="section4">
+	    <div class="slide">
+		<div class="intro">
+		<div class="introLow">
+            <div class="lowWrap">
+		    <div class="Wrap">
+			<h2 class="title">The Astronaut</h2 class="title">
+            <p>이 포트폴리오는 코딩에 대한 저의 감상문과 같습니다.
+                처음 코딩을 접하고 웹은 마치 광활한 우주와 같고 
+                사이트들은 별 하나하나와 같다고 생각했습니다.<br>
+                이제 막 우주 개발인이 된 저의 작품이라 아직은 
+                어린왕자의 소행성처럼 작고 별 것 없지만 앞으로 
+                얼마나 아름다운 별들을 만들어낼지 저와 함께 기대해주시면 좋겠습니다. 
+                감사합니다 :)</p>
+            <article calss="a bubble"></article>
+            <article class="designs">
+            </article>
+		</div>
+          
+
+        </div>
+	</div>
+            </div>
+        </div>
+
+    </div>
+
+    
+</section>
+
+
+
+</body>
+</html>
